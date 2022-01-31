@@ -5,7 +5,7 @@ name: Tests
 
 on:
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
 
 jobs:
 
@@ -15,20 +15,24 @@ jobs:
 
     strategy:
       matrix:
-        python-version: ["3.8", "3.9", "3.10"]
+        py: ["3.8", "3.9", "3.10"]
+        pytest: ["5", "6"]
+        exclude:
+          - py: "3.10"
+            pytest: "5"
 
     steps:
     - uses: actions/checkout@v2
-    - name: Set up Python ${{ matrix.python-version }}
+    - name: Set up Python ${{ matrix.py }}
       uses: actions/setup-python@v2
       with:
-        python-version: ${{ matrix.python-version }}
+        python-version: ${{ matrix.py }}
     - name: Install Tox
       run: |
         pip install tox
     - name: Run test environments
       run: |
-        tox -e py${{ matrix.python-version }}-pytest5-trytond5,py${{ matrix.python-version }}-pytest6-trytond5,py${{ matrix.python-version }}-pytest5-trytond6,py${{ matrix.python-version }}-pytest6-trytond6,py${{ matrix.python-version }}-pytest5-trytonddev,py${{ matrix.python-version }}-pytest6-trytonddev,
+        tox -e py${{ matrix.py }}-pytest${{ matrix.pytest }}-trytond50,py${{ matrix.py }}-pytest${{ matrix.pytest }}-trytond60,py${{ matrix.py }}-pytest${{ matrix.pytest }}-trytonddev
 
   lint:
 

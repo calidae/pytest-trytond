@@ -17,4 +17,3 @@ def test_transaction_fixture_used():
 
 def test_transaction_fixture_requested(transaction):
     assert Pool().get('test.model')
-

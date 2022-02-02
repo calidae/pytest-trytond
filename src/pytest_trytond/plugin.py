@@ -31,8 +31,15 @@ def pytest_sessionstart(session):
     config.update_etc()
 
     # Import after application is configured
-    from trytond import backend
-    if backend.name == 'sqlite':
+    import trytond.backend
+
+    # See https://bugs.tryton.org/issue8836
+    if tuple(trytond.__version__.split('.')) < ('5', '6'):
+        backend_name = trytond.backend.name()
+    else:
+        backend_name = trytond.backend.name
+
+    if backend_name == 'sqlite':
         database_name = ':memory:'
     else:
         database_name = 'test_' + str(int(time.time()))
